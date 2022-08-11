@@ -107,13 +107,6 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
         setHasComputedResult(false)
     }
 
-    function onClear() {
-        clearOperationConstraints();
-        setInvalidOperation(false)
-        setOperationHistory([])
-    }
-
-
     function onDigitClick(digit) {
         return function onClick() {
 
@@ -197,7 +190,7 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
         if (withInDisplayLimit(currentNumber)) {
             if (!isReal) {
                 if (isEmpty(currentNumber) || hasComputedResult) {
-                    setCurrentNumber(`${ZERO}${POINT} `)
+                    setCurrentNumber(`${ZERO}${POINT}`)
                     setHasComputedResult(false)
                 } else {
                     setCurrentNumber((num) => num + POINT)

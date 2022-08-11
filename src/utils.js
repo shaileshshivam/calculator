@@ -1,4 +1,4 @@
-import { DISPLAY_LIMIT, OPERATION, ZERO } from "./constant"
+import { DISPLAY_LIMIT, OPERATION } from "./constant"
 
 export function isEmpty(str) {
     if (str.length === 0) {
@@ -20,41 +20,59 @@ export function computeOperationResult(operationHistory) {
     let operationResult = 0;
 
     operationHistory.forEach((value, index, opHistory) => {
+
         switch (value) {
-            case OPERATION.PLUS: {
-                operationResult += Number(opHistory[index + 1]);
-            }
+            case OPERATION.PLUS:
+                if (isEmpty(opHistory[index + 1])) {
+                    throw new Error("Missing operands")
+                } else {
+                    operationResult += Number(opHistory[index + 1]);
+                }
+
                 break;
 
-            case OPERATION.MINUS: {
-                operationResult -= Number(opHistory[index + 1]);
-            }
+            case OPERATION.MINUS:
+
+                if (isEmpty(opHistory[index + 1])) {
+                    throw new Error("Missing operands")
+                } else {
+                    operationResult -= Number(opHistory[index + 1]);
+                }
+
                 break;
 
-            case OPERATION.MULTIPLY: {
-                operationResult *= Number(opHistory[index + 1])
-            }
+            case OPERATION.MULTIPLY:
+                if (isEmpty(opHistory[index + 1])) {
+                    throw new Error("Missing operands")
+                } else {
+                    operationResult *= Number(opHistory[index + 1])
+                }
+
                 break;
 
-            case OPERATION.DIVIDE: {
-                if (opHistory[index + 1] === ZERO || opHistory[index + 1] === "-0") {
+            case OPERATION.DIVIDE:
+                if (Number(opHistory[index + 1]) === 0 || Number(opHistory[index + 1]) === -0) {
                     throw new Error("Cannot divide by zero")
                 }
 
                 operationResult /= Number(opHistory[index + 1])
-            }
+
                 break;
 
-            case OPERATION.PERCENT: {
-                operationResult *= (opHistory[index + 1] / 100)
-            }
+            case OPERATION.PERCENT:
+                if (isEmpty(opHistory[index + 1])) {
+                    throw new Error("Missing operands")
+                } else {
+                    operationResult *= (opHistory[index + 1] / 100)
+                }
+
                 break;
 
-            default: {
+            default:
                 if (index === 0) {
                     operationResult = Number(value)
                 }
-            }
+
         }
     })
 
