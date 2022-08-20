@@ -13,21 +13,61 @@ const iconProps = {
 }
 
 
-const numbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3"]
+const numbers = [
+    {
+        num: "7",
+        id: "seven",
+    },
+    {
+        num: "8",
+        id: "eight",
+    },
+    {
+        num: "9",
+        id: "nine",
+    },
+    {
+        num: "4",
+        id: "four",
+    },
+    {
+        num: "5",
+        id: "five",
+    },
+    {
+        num: "6",
+        id: "six",
+    },
+    {
+        num: "1",
+        id: "one",
+    },
+    {
+        num: "2",
+        id: "two",
+    },
+    {
+        num: "3",
+        id: "three",
+    }
+]
 
 
 const basicOperations = [
     {
         icon: <Plus {...iconProps} />,
-        label: OPERATION.PLUS
+        label: OPERATION.PLUS,
+        id: "add"
     },
     {
         icon: <X {...iconProps} />,
-        label: OPERATION.MULTIPLY
+        label: OPERATION.MULTIPLY,
+        id: "multiply"
     },
     {
         icon: <Divide {...iconProps} />,
-        label: OPERATION.DIVIDE
+        label: OPERATION.DIVIDE,
+        id: "divide"
     }
 ]
 
@@ -99,20 +139,22 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
 
     const [isReal, setIsReal] = useState(false)
     const [hasComputedResult, setHasComputedResult] = useState(false)
+    const [clickedOperation, setClickedOperation] = useState(false);
 
+    console.log(operationHistory)
 
     function clearOperationConstraints() {
-        setCurrentNumber("")
+        setCurrentNumber("0")
         setIsReal(false)
         setHasComputedResult(false)
     }
 
     function onDigitClick(digit) {
         return function onClick() {
-
-            if (hasComputedResult || isEmpty(currentNumber)) {
+            if (hasComputedResult || isEmpty(currentNumber) || currentNumber === "0") {
                 setCurrentNumber(digit)
                 setHasComputedResult(false)
+                setClickedOperation(false);
                 return
             }
 
@@ -125,7 +167,7 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
 
     function setErrorState() {
         setInvalidOperation(true);
-        setCurrentNumber("")
+        setCurrentNumber("0")
         setOperationHistory([])
     }
 
@@ -135,6 +177,8 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
             if (!isReal && currentNumber.startsWith(ZERO)) {
                 return
             }
+
+            setClickedOperation(false);
 
             if (hasComputedResult) {
                 setCurrentNumber(ZERO)
@@ -164,7 +208,7 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
     }
 
     function onMinus() {
-        if (isEmpty(currentNumber)) {
+        if (isEmpty(currentNumber) || currentNumber === "0") {
             setCurrentNumber(OPERATION.MINUS)
         } else if (currentNumber.length === 1 && currentNumber === OPERATION.MINUS) {
             onClearChar();
@@ -202,11 +246,16 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
 
     function onOperationClick(operation) {
         return function onClick() {
-            if (isEmpty(currentNumber)) {
+            if ((isEmpty(currentNumber) || currentNumber === "0") && !clickedOperation) {
                 return
             }
 
-            setOperationHistory((history) => [...history, currentNumber, operation])
+            if (clickedOperation) {
+                setOperationHistory((history) => [...history.slice(0, history.length - 1), operation])
+            } else {
+                setOperationHistory((history) => [...history, currentNumber, operation])
+                setClickedOperation(true);
+            }
             clearOperationConstraints();
         }
     }
@@ -222,10 +271,6 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
             return;
         }
 
-        operationResult = Number.isInteger(operationResult) ?
-            operationResult.toString() :
-            operationResult.toFixed(2).toString()
-
         setCurrentNumber(operationResult);
         setOperationHistory([])
         setHasComputedResult(true)
@@ -234,7 +279,7 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
 
     return <Container>
 
-        <Clear onClick={onClear}>c</Clear>
+        <Clear onClick={onClear} id="clear">c</Clear>
         <Operator onClick={onSquareRoot}>
             <SquareRoot {...iconProps} />
         </Operator>
@@ -247,21 +292,21 @@ export default function Numpad({ operationHistory, currentNumber, setCurrentNumb
 
         <DigitsContainer>
             {
-                numbers.map(num => <Digit key={num} onClick={onDigitClick(num)}>{num}</Digit>)
+                numbers.map(({ num, id }) => <Digit key={num} id={id} onClick={onDigitClick(num)}>{num}</Digit>)
             }
-            <Digit onClick={onZeroClick}>{ZERO}</Digit>
-            <Digit onClick={onPointClick}>{POINT}</Digit>
-            <Operator onClick={onResultClick}>
-                <Equal {...iconProps} />
+            <Digit onClick={onZeroClick} id="zero">{ZERO}</Digit>
+            <Digit onClick={onPointClick} id="decimal">{POINT}</Digit>
+            <Operator onClick={onResultClick} id="equals">
+                =
             </Operator>
         </DigitsContainer>
 
         <BasicOperationsContainer>
-            <Operator onClick={onMinus}>
+            <Operator onClick={onMinus} id="subtract">
                 <Minus {...iconProps} />
             </Operator>
             {
-                basicOperations.map(({ icon, label }) => <Operator key={label} onClick={onOperationClick(label)}>{icon}</Operator>)
+                basicOperations.map(({ icon, label, id }) => <Operator id={id} key={label} onClick={onOperationClick(label)}>{icon}</Operator>)
             }
         </BasicOperationsContainer>
 

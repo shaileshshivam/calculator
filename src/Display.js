@@ -64,7 +64,7 @@ export default function Display({ currentNumber, operationHistory, isInvalidOper
                 [...operationHistory, currentNumber].join(" ")
             }
         </OperationHistory>
-        <CurrentNumber isNumberWiderThanDisplay={isNumberWiderThanDisplay} scaledFontSize={scaledFontSize}>
+        <CurrentNumber id="display" isNumberWiderThanDisplay={isNumberWiderThanDisplay} scaledFontSize={scaledFontSize}>
             {
                 isInvalidOperation ?
                     <ErrorMessage>invalid operation</ErrorMessage> :

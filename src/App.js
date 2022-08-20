@@ -29,7 +29,7 @@ const Calculator = styled.div`
 function App() {
 
   const [operationHistory, setOperationHistory] = useState([])
-  const [currentNumber, setCurrentNumber] = useState("")
+  const [currentNumber, setCurrentNumber] = useState("0")
   const [invalidOperation, setInvalidOperation] = useState(false);
 
   return (

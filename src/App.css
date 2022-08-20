@@ -1,11 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 
 
-
-html {
-  font-size: 98%;
-}
-
 body,
 div,
 button,
@@ -13,4 +8,19 @@ span {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+
+
+@media screen and (min-width: 300px) and (max-width: 600px) {
+  html {
+    font-size: 80%;
+  }
+}
+
+
+@media screen and (min-width: 601px) {
+  html {
+    font-size: 98%;
+  }
 }

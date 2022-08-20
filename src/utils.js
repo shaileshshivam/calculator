@@ -17,7 +17,9 @@ export function withInDisplayLimit(str) {
 
 
 export function computeOperationResult(operationHistory) {
+
     let operationResult = 0;
+    let precisionDigits = 1;
 
     operationHistory.forEach((value, index, opHistory) => {
 
@@ -76,5 +78,11 @@ export function computeOperationResult(operationHistory) {
         }
     })
 
-    return operationResult
+    const fractionalPart = Math.abs(operationResult - Math.floor(operationResult))
+
+    if (fractionalPart !== 0.5) {
+        precisionDigits = 4
+    }
+
+    return Number.isInteger(operationResult) ? operationResult : Number(operationResult).toFixed(precisionDigits)
 }
